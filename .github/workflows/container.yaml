@@ -23,7 +23,7 @@ jobs:
             image: debian:stable
             keyring: debian-archive-keyring
           - name: ubuntu
-            image: ubuntu:lts
+            image: ubuntu:latest
             keyring: ubuntu-archive-keyring
     runs-on: ubuntu-latest
     permissions:
