@@ -57,7 +57,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3.5.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-$${{ matrix.os.name }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.os.name }}
           tags: |
             type=edge,branch=${{ github.event.repository.default_branch }}
             type=ref,event=branch
