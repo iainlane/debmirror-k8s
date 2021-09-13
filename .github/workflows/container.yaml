@@ -20,13 +20,11 @@ jobs:
       matrix:
         os:
           - name: debian
-            vars:
-              image: debian:stable
-              keyring: debian-archive-keyring
+            image: debian:stable
+            keyring: debian-archive-keyring
           - name: ubuntu
-            vars:
-              image: ubuntu:lts
-              keyring: ubuntu-archive-keyring
+            image: ubuntu:lts
+            keyring: ubuntu-archive-keyring
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -72,8 +70,8 @@ jobs:
         with:
           context: .
           build_args: |
-            image=${{ matrix.os.vars.name }}
-            keyring_package=${{ matrix.os.vars.keyring }}
+            image=${{ matrix.os.image }}
+            keyring_package=${{ matrix.os.keyring }}
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
