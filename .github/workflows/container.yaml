@@ -69,7 +69,7 @@ jobs:
         uses: docker/build-push-action@v2.7.0
         with:
           context: .
-          build_args: |
+          build-args: |
             image=${{ matrix.os.image }}
             keyring_package=${{ matrix.os.keyring }}
           builder: ${{ steps.buildx.outputs.name }}
