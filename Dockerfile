@@ -1,10 +1,24 @@
-ARG image=debian:stable
+ARG image=debian:stable-slim
 ARG keyring_package=debian-archive-keyring
+ARG keyring_file=/usr/share/keyrings/debian-archive-keyring.gpg
 
 FROM ${image}
 
 RUN apt update
 RUN apt install -y debmirror gpg ${keyring_package}
 
-CMD [ "sh", "-c", \
-    "debmirror /mirror/${DIST} --host=${HOST} --root=${DIST} --dist=${RELEASES} --section=${SECTIONS} --dep11 --i18n --arch=${ARCHES} --method=${METHOD} --progress ${OTHERARGS}" ]
+ENV keyring_file_env ${keyring_file}
+
+CMD  "/usr/bin/env" "GNUPGHOME=/nonexistent" \
+     "/usr/bin/debmirror" \
+     "--host" "${HOST}" \
+     "--root" "${DIST}" \
+     "--dist"  "${RELEASES}" \
+     "--section" "${SECTIONS}" \
+     "--i18n" \
+     "--arch" "${ARCHES}" \
+     "--method" "${METHOD}" \
+     "--keyring" "${keyring_file_env}" \
+     "--rsync-extra=none" \
+     "--progress" \
+     "/mirror/${DIST}"

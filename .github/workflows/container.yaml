@@ -20,7 +20,7 @@ jobs:
       matrix:
         os:
           - name: debian
-            image: debian:stable
+            image: debian:stable-slim
             keyring: debian-archive-keyring
           - name: ubuntu
             image: ubuntu:latest
@@ -71,6 +71,7 @@ jobs:
           build-args: |
             image=${{ matrix.os.image }}
             keyring_package=${{ matrix.os.keyring }}
+            keyring_file=/usr/share/keyrings/${{ matrix.os.keyring }}.gpg
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
