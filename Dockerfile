@@ -1,8 +1,9 @@
 ARG image=debian:stable-slim
-ARG keyring_package=debian-archive-keyring
-ARG keyring_file=/usr/share/keyrings/debian-archive-keyring.gpg
 
 FROM ${image}
+
+ARG keyring_package=debian-archive-keyring
+ARG keyring_file="/usr/share/keyrings/debian-archive-keyring.gpg"
 
 RUN apt update
 RUN apt install -y debmirror gpg ${keyring_package}
