@@ -6,7 +6,7 @@ ARG keyring_package=debian-archive-keyring
 ARG keyring_file="/usr/share/keyrings/debian-archive-keyring.gpg"
 
 RUN apt update
-RUN apt install -y debmirror gpg ${keyring_package}
+RUN apt install -y debmirror gpg xz-utils ${keyring_package}
 
 ENV keyring_file_env ${keyring_file}
 
