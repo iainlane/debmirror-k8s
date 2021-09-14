@@ -1,0 +1,22 @@
+resources:
+  - k8s/priorityclass.yaml
+  - k8s/storage.yaml
+  - k8s/deployment-debmirror.yaml
+  - k8s/service-ingress.yaml
+namespace: debmirror
+configMapGenerator:
+  - name: debmirror-debian-conf
+    envs: 
+      - debmirror-confs/debian.conf
+  - name: debmirror-ubuntu-conf
+    envs: 
+      - debmirror-confs/ubuntu.conf
+  - name: debmirror-ubuntu-ports-conf
+    envs: 
+      - debmirror-confs/ubuntu-ports.conf
+  - name: packages-index-html
+    files:
+      - static/index.html
+  - name: nginx-default-conf
+    files:
+      - conf/nginx-default.conf

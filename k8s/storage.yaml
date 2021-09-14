@@ -1,0 +1,14 @@
+# We need a place to store the actual packages. This could be dynamically
+# provisioned, but since the initial sync takes a long time on most
+# connections, we'll create this once and then *not* delete it.
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: local-packages-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1.5Ti
+  storageClassName: local-packages

@@ -1,0 +1,7 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: debmirror-high-priority
+value: 1000000
+globalDefault: false
+description: "This is used so that debmirror pods (which must be on the host tha thas the volume mount for the mirror) get priority over other pods."
