@@ -36,6 +36,7 @@ spec:
                 name: debmirror-ubuntu-ports-conf
             imagePullPolicy: Always
             volumeMounts: *vm
+          concurrencyPolicy: Forbid
           restartPolicy: OnFailure
           priorityClassName: debmirror-high-priority
 ---
