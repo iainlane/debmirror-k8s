@@ -22,6 +22,6 @@ CMD  "/usr/bin/env" "GNUPGHOME=/nonexistent" \
      "--keyring" "${keyring_file_env}" \
      "--rsync-extra=none" \
      "--getcontents" \
-     "--diff-mode=mirror" \
+     "--diff=mirror" \
      "--progress" \
      "/mirror/${DIST}"
