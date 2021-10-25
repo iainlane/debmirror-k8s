@@ -12,6 +12,7 @@ ENV keyring_file_env ${keyring_file}
 
 CMD  "/usr/bin/env" "GNUPGHOME=/nonexistent" \
      "/usr/bin/debmirror" \
+     "--allow-dist-rename" \
      "--host" "${HOST}" \
      "--root" "${DIST}" \
      "--dist"  "${RELEASES}" \
