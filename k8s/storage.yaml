@@ -12,3 +12,4 @@ spec:
     requests:
       storage: 1.5Ti
   storageClassName: local-packages
+  volumeMode: Filesystem
