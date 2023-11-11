@@ -6,13 +6,13 @@ resources:
 namespace: debmirror
 configMapGenerator:
   - name: debmirror-debian-conf
-    envs: 
+    envs:
       - debmirror-confs/debian.conf
   - name: debmirror-ubuntu-conf
-    envs: 
+    envs:
       - debmirror-confs/ubuntu.conf
   - name: debmirror-ubuntu-ports-conf
-    envs: 
+    envs:
       - debmirror-confs/ubuntu-ports.conf
   - name: packages-index-html
     files:
