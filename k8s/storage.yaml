@@ -4,12 +4,38 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: local-packages-pvc
+  name: packages-ubuntu-ports
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1.5Ti
-  storageClassName: local-packages
+      storage: 750Gi
+  storageClassName: openebs-zfspv
+  volumeMode: Filesystem
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: packages-ubuntu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Ti
+  storageClassName: openebs-zfspv
+  volumeMode: Filesystem
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: packages-debian
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Ti
+  storageClassName: openebs-zfspv
   volumeMode: Filesystem

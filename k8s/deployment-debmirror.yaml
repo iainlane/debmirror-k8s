@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: update-debmirror-cron
+  name: update-debmirror-cron-ubuntu-ports
 spec:
   schedule: "@hourly"
   jobTemplate:
@@ -11,31 +11,76 @@ spec:
           volumes:
           - name: local-packages
             persistentVolumeClaim:
-              claimName: local-packages-pvc
+              claimName: packages-ubuntu-ports
           containers:
-          - name: debian
-            image: iainlane/debmirror-debian
+          - name: ubuntu-ports
+            image: iainlane/debmirror-ubuntu
             envFrom:
             - configMapRef:
-                name: debmirror-debian-conf
+                name: debmirror-ubuntu-ports-conf
             imagePullPolicy: Always
-            volumeMounts: &vm
+            volumeMounts:
             - name: local-packages
               mountPath: "/mirror"
+          restartPolicy: OnFailure
+          priorityClassName: debmirror-high-priority
+  concurrencyPolicy: Forbid
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-debmirror-cron-ubuntu
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: local-packages
+            persistentVolumeClaim:
+              claimName: packages-ubuntu
+          containers:
           - name: ubuntu
             image: iainlane/debmirror-ubuntu
             envFrom:
             - configMapRef:
                 name: debmirror-ubuntu-conf
             imagePullPolicy: Always
-            volumeMounts: *vm
-          - name: ports
-            image: iainlane/debmirror-ubuntu
+            volumeMounts:
+            - name: local-packages
+              mountPath: "/mirror"
+          restartPolicy: OnFailure
+          priorityClassName: debmirror-high-priority
+  concurrencyPolicy: Forbid
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-debmirror-cron-debian
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: local-packages
+            persistentVolumeClaim:
+              claimName: packages-debian
+          containers:
+          - name: debian
+            image: iainlane/debmirror-debian
+            command:
+              - /bin/sleep
+              - infinity
             envFrom:
             - configMapRef:
-                name: debmirror-ubuntu-ports-conf
+                name: debmirror-debian-conf
             imagePullPolicy: Always
-            volumeMounts: *vm
+            volumeMounts:
+            - name: local-packages
+              mountPath: "/mirror"
           restartPolicy: OnFailure
           priorityClassName: debmirror-high-priority
   concurrencyPolicy: Forbid
@@ -57,21 +102,36 @@ spec:
         app: debmirror-nginx
     spec:
       volumes:
-      - name: local-packages
-        persistentVolumeClaim:
-          claimName: local-packages-pvc
       - name: nginx-index-html
         configMap:
           name: packages-index-html
       - name: nginx-default-conf
         configMap:
           name: nginx-default-conf
+      - name: packages-debian
+        persistentVolumeClaim:
+          claimName: packages-debian
+      - name: packages-ubuntu
+        persistentVolumeClaim:
+          claimName: packages-ubuntu
+      - name: packages-ubuntu-ports
+        persistentVolumeClaim:
+          claimName: packages-ubuntu-ports
       containers:
       - name: nginx
         image: nginx
         volumeMounts:
-        - name: local-packages
-          mountPath: /mirrors
+        - name: packages-debian
+          mountPath: /mirrors/debian
+          subPath: debian
+          readOnly: true
+        - name: packages-ubuntu
+          mountPath: /mirrors/ubuntu
+          subPath: ubuntu
+          readOnly: true
+        - name: packages-ubuntu-ports
+          mountPath: /mirrors/ubuntu-ports
+          subPath: ubuntu-ports
           readOnly: true
         - name: nginx-default-conf
           mountPath: /etc/nginx/conf.d/default.conf
@@ -79,4 +139,11 @@ spec:
         - name: nginx-index-html
           mountPath: /index.html
           subPath: index.html
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
       priorityClassName: debmirror-high-priority
