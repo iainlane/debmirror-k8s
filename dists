@@ -26,9 +26,9 @@ def get_ubuntu_dists():
     return ','.join(dists)
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ['debian', 'ubuntu']:
+    if len(sys.argv) != 2 or sys.argv[1] not in ['debian', 'ubuntu', 'ubuntu-ports']:
         script = os.path.basename(sys.argv[0])
-        print(f"Usage: {script} [debian|ubuntu]", file=sys.stderr)
+        print(f"Usage: {script} [debian|ubuntu|ubuntu-ports]", file=sys.stderr)
         sys.exit(1)
 
     if sys.argv[1] == 'debian':
