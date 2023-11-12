@@ -6,10 +6,9 @@ specific to my setup but maybe it's useful to someone or you want to contribute
 to generalise it a bit.
 
 The Dockerfile here builds an image with `debmirror`, `gpg` and the keyrings set
-up. They're uploaded to Docker Hub
-([debian](https://hub.docker.com/repository/docker/iainlane/debmirror-debian)
-[ubuntu](https://hub.docker.com/repository/docker/iainlane/debmirror-ubuntu)) by
-an action here.
+up. [It's uploaded to Docker
+Hub](https://hub.docker.com/repository/docker/iainlane/debmirror) by an action
+here.
 
 In `k8s` and `kustomization.yaml` you've got the setup I'm using which assumes
 the following-
