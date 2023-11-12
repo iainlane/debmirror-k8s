@@ -2,10 +2,11 @@
 
 set -e
 
+DISTS=${DISTS:-$(dists "${DIST}")}
+
 exec \
   /usr/bin/env \
   GNUPGHOME=/nonexistent \
-  "DISTS=${DISTS:-$(dists "${DIST}")}" \
   /usr/bin/debmirror \
   "--allow-dist-rename" \
   "--host" "${HOST}" \
