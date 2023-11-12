@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+exec \
+  /usr/bin/env \
+  GNUPGHOME=/nonexistent \
+  "DISTS=${DISTS:-$(dists "${DIST}")}" \
+  /usr/bin/debmirror \
+  "--allow-dist-rename" \
+  "--host" "${HOST}" \
+  "--root" "${DIST}" \
+  "--dist" "${DISTS}" \
+  "--section" "${SECTIONS}" \
+  "--i18n" \
+  "--arch" "${ARCHES}" \
+  "--method" "${METHOD}" \
+  "--keyring" "${KEYRING_FILE}" \
+  "--rsync-extra=none" \
+  "--getcontents" \
+  "--diff=mirror" \
+  "--progress" \
+  "/mirror/${DIST}"

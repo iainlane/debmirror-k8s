@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 750Gi
+      storage: 1.5Ti
   storageClassName: openebs-zfspv
   volumeMode: Filesystem
 ---
@@ -23,7 +23,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Ti
+      storage: 1.5Ti
   storageClassName: openebs-zfspv
   volumeMode: Filesystem
 ---

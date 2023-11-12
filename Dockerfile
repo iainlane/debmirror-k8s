@@ -1,28 +1,21 @@
-ARG image=debian:stable-slim
+FROM ubuntu:jammy-20231004 AS ubuntu
 
-FROM ${image}
-
-ARG keyring_package=debian-archive-keyring
-ARG keyring_file="/usr/share/keyrings/debian-archive-keyring.gpg"
+FROM debian:12.2-slim
 
 RUN apt update
-RUN apt install -y debmirror gpg xz-utils ${keyring_package}
+RUN apt install -y debmirror gpg xz-utils python3 python3-distro-info ${keyring_package} && rm -rf /var/lib/apt/lists/*
 
-ENV keyring_file_env ${keyring_file}
+ENV HOST=deb.debian.org
+ENV DIST=debian
+ENV SECTIONS=main,contrib,non-free
+ENV ARCHES=amd64,arm64,armhf
+ENV METHOD=http
+ENV KEYRING_FILE=/usr/share/keyrings/${DIST}-archive-keyring.gpg
 
-CMD  "/usr/bin/env" "GNUPGHOME=/nonexistent" \
-     "/usr/bin/debmirror" \
-     "--allow-dist-rename" \
-     "--host" "${HOST}" \
-     "--root" "${DIST}" \
-     "--dist"  "${RELEASES}" \
-     "--section" "${SECTIONS}" \
-     "--i18n" \
-     "--arch" "${ARCHES}" \
-     "--method" "${METHOD}" \
-     "--keyring" "${keyring_file_env}" \
-     "--rsync-extra=none" \
-     "--getcontents" \
-     "--diff=mirror" \
-     "--progress" \
-     "/mirror/${DIST}"
+ENV DIST=debian
+
+COPY run-debmirror /usr/local/bin/
+COPY dists /usr/local/bin/
+COPY --from=ubuntu /usr/share/keyrings/ubuntu-archive-keyring.gpg /usr/share/keyrings/
+
+ENTRYPOINT ["run-debmirror"]

@@ -14,7 +14,7 @@ spec:
               claimName: packages-ubuntu-ports
           containers:
           - name: ubuntu-ports
-            image: iainlane/debmirror-ubuntu
+            image: iainlane/debmirror
             envFrom:
             - configMapRef:
                 name: debmirror-ubuntu-ports-conf
@@ -42,7 +42,7 @@ spec:
               claimName: packages-ubuntu
           containers:
           - name: ubuntu
-            image: iainlane/debmirror-ubuntu
+            image: iainlane/debmirror
             envFrom:
             - configMapRef:
                 name: debmirror-ubuntu-conf
@@ -70,10 +70,7 @@ spec:
               claimName: packages-debian
           containers:
           - name: debian
-            image: iainlane/debmirror-debian
-            command:
-              - /bin/sleep
-              - infinity
+            image: iainlane/debmirror
             envFrom:
             - configMapRef:
                 name: debmirror-debian-conf
