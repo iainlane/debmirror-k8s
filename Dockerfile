@@ -12,8 +12,6 @@ ENV ARCHES=amd64,arm64,armhf
 ENV METHOD=http
 ENV KEYRING_FILE=/usr/share/keyrings/${DIST}-archive-keyring.gpg
 
-ENV DIST=debian
-
 COPY run-debmirror /usr/local/bin/
 COPY dists /usr/local/bin/
 COPY --from=ubuntu /usr/share/keyrings/ubuntu-archive-keyring.gpg /usr/share/keyrings/
