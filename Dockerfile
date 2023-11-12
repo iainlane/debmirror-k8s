@@ -10,7 +10,6 @@ ENV DIST=debian
 ENV SECTIONS=main,contrib,non-free
 ENV ARCHES=amd64,arm64,armhf
 ENV METHOD=http
-ENV KEYRING_FILE=/usr/share/keyrings/${DIST}-archive-keyring.gpg
 
 COPY run-debmirror /usr/local/bin/
 COPY dists /usr/local/bin/

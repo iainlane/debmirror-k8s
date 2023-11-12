@@ -3,6 +3,7 @@
 set -e
 
 DISTS=${DISTS:-$(dists "${DIST}")}
+KEYRING_FILE=/usr/share/keyrings/${DIST}-archive-keyring.gpg
 
 exec \
   /usr/bin/env \
