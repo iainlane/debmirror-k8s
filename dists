@@ -3,39 +3,65 @@
 import os
 import sys
 import itertools
-from distro_info import DebianDistroInfo, UbuntuDistroInfo
+
 
 def get_sorted_dists(distro_functions):
-    dist_objects = itertools.chain(*(func(result="object") for func in distro_functions))
-    unique_dists = {dist.series for dist in sorted(dist_objects, key=lambda x: x.created)}
+    from distro_info import UbuntuDistroInfo
+
+    dist_objects = itertools.chain(
+        *(func(result="object") for func in distro_functions)
+    )
+    unique_dists = {
+        dist.series for dist in sorted(dist_objects, key=lambda x: x.created)
+    }
     return sorted(unique_dists)
 
+
 def get_debian_dists():
-    debian_info = DebianDistroInfo()
-    dists = get_sorted_dists([debian_info.supported])  #, debian_info.lts_supported]))
-    dists.extend(["stable", "testing", "unstable"])
-    return ','.join(dists)
+    dists = [
+        f"{release}{suffix}"
+        for release in ["stable", "testing"]
+        for suffix in [
+            "",
+            "-proposed-updates",
+            "-updates",
+            "-backports",
+            "-backports-sloppy",
+        ]
+    ]
+    dists.extend(["unstable", "experimental"])
+    return ",".join(dists)
+
 
 def get_ubuntu_dists():
     ubuntu_info = UbuntuDistroInfo()
-    sorted_ubuntu_dists = get_sorted_dists([ubuntu_info.supported])  # , ubuntu_info.supported_esm])
+    sorted_ubuntu_dists = get_sorted_dists(
+        [ubuntu_info.supported]
+    )  # , ubuntu_info.supported_esm])
     dists = []
     for release in sorted_ubuntu_dists:
-        dists.extend([f"{release}-{suffix}" for suffix in ['proposed', 'updates', 'backports', 'security']])
+        dists.extend(
+            [
+                f"{release}-{suffix}"
+                for suffix in ["proposed", "updates", "backports", "security"]
+            ]
+        )
         dists.append(release)
-    return ','.join(dists)
+    return ",".join(dists)
+
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ['debian', 'ubuntu', 'ubuntu-ports']:
+    if len(sys.argv) != 2 or sys.argv[1] not in ["debian", "ubuntu", "ubuntu-ports"]:
         script = os.path.basename(sys.argv[0])
         print(f"Usage: {script} [debian|ubuntu|ubuntu-ports]", file=sys.stderr)
         sys.exit(1)
 
-    if sys.argv[1] == 'debian':
+    if sys.argv[1] == "debian":
         print(get_debian_dists())
         sys.exit(0)
 
     print(get_ubuntu_dists())
+
 
 if __name__ == "__main__":
     main()
