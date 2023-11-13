@@ -4,10 +4,10 @@ import os
 import sys
 import itertools
 
+from distro_info import DebianDistroInfo, UbuntuDistroInfo
+
 
 def get_sorted_dists(distro_functions):
-    from distro_info import UbuntuDistroInfo
-
     dist_objects = itertools.chain(
         *(func(result="object") for func in distro_functions)
     )
@@ -18,23 +18,29 @@ def get_sorted_dists(distro_functions):
 
 
 def get_debian_dists():
-    dists = [
-        f"{release}{suffix}"
-        for release in ["stable", "testing"]
-        for suffix in [
-            "",
-            "-proposed-updates",
-            "-updates",
-            "-backports",
-            "-backports-sloppy",
+    debian = DebianDistroInfo()
+
+    oldstable = debian.codename("oldstable")
+    stable = debian.codename("stable")
+    testing = debian.codename("testing")
+
+    dists = [oldstable, stable, testing]
+
+    dists.extend(
+        [
+            f"{release}-{suffix}"
+            for release in [oldstable, stable, testing]
+            for suffix in ["backports", "proposed-updates", "updates"]
         ]
-    ]
-    dists.extend(["unstable", "experimental"])
-    return ",".join(dists)
+    )
+
+    dists.extend([f"{release}-backports-sloppy" for release in [oldstable, stable]])
+    return ",".join(sorted(dists))
 
 
 def get_ubuntu_dists():
     ubuntu_info = UbuntuDistroInfo()
+
     sorted_ubuntu_dists = get_sorted_dists(
         [ubuntu_info.supported]
     )  # , ubuntu_info.supported_esm])
