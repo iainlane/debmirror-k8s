@@ -24,7 +24,7 @@ def get_debian_dists():
     stable = debian.codename("stable")
     testing = debian.codename("testing")
 
-    dists = [oldstable, stable, testing]
+    dists = [oldstable, stable, testing, "unstable", "experimental"]
 
     dists.extend(
         [
