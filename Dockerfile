@@ -6,7 +6,6 @@ RUN apt update && apt install -y distro-info-data && rm -rf /var/lib/apt/lists/*
 FROM debian:12.2-slim
 
 RUN apt update && apt install -y debmirror gpg xz-utils python3 python3-distro-info ${keyring_package} && rm -rf /var/lib/apt/lists/*
-# Install distro-info-data from unstable
 
 ENV HOST=deb.debian.org
 ENV DIST=debian
