@@ -3,9 +3,9 @@ FROM ubuntu:jammy-20231004 AS ubuntu
 # This is more likely to have up-to-date Ubuntu release info
 RUN apt update && apt install -y distro-info-data && rm -rf /var/lib/apt/lists/*
 
-FROM debian:12.2-slim
+FROM debian:stable-20240513-slim
 
-RUN apt update && apt install -y debmirror gpg xz-utils python3 python3-distro-info ${keyring_package} && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y debmirror gpg xz-utils python3 python3-distro-info && rm -rf /var/lib/apt/lists/*
 
 ENV HOST=deb.debian.org
 ENV DIST=debian
