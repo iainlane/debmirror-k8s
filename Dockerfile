@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20231004 AS ubuntu
+FROM ubuntu:jammy-20240427 AS ubuntu
 
 # This is more likely to have up-to-date Ubuntu release info
 RUN apt update && apt install -y distro-info-data && rm -rf /var/lib/apt/lists/*
