@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
   pull_request:
     branches:
       - main
@@ -13,13 +13,15 @@ on:
 env:
   IMAGE_NAME: debmirror
   NAMESPACE: iainlane
+  REGISTRY: index.docker.io
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      attestations: write
+      contents: write # for sbom-action artifact uploads
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -56,6 +58,7 @@ jobs:
             type=semver,pattern={{major}},prefix=v
 
       - name: Build and push Docker image
+        id: build-push
         uses: docker/build-push-action@v5.3.0
         with:
           context: .
@@ -64,3 +67,26 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@173725a1209d09b31f9d30a3890cf2757ebbff0d # v1.1.2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.build-push.outputs.digest }}
+          push-to-registry: ${{ github.event_name != 'pull_request' }}
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e8d2a6937ecead383dfe75190d104edd1f9c5751 # v0.16
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          output-file: sbom.json
+
+      - name: Generate SBOM attestation
+        uses: actions/attest-sbom@aaa2d0a82e0853a3aea99fcf632b9b61cdb534c2 # v1.1.2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.build-push.outputs.digest }}
+          sbom-path: "sbom.json"
+          push-to-registry: ${{ github.event_name != 'pull_request'}}
