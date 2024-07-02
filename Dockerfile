@@ -3,7 +3,7 @@ FROM ubuntu:noble-20240605 AS ubuntu
 # This is more likely to have up-to-date Ubuntu release info
 RUN apt update && apt install -y distro-info-data && rm -rf /var/lib/apt/lists/*
 
-FROM debian:stable-20240612-slim
+FROM debian:stable-20240701-slim
 
 RUN apt update && apt install -y debmirror gpg xz-utils python3 python3-distro-info && rm -rf /var/lib/apt/lists/*
 
