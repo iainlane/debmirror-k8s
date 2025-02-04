@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20241015 AS ubuntu
+FROM ubuntu:noble-20250127 AS ubuntu
 
 # This is more likely to have up-to-date Ubuntu release info
 RUN apt update && apt install -y distro-info-data && rm -rf /var/lib/apt/lists/*
